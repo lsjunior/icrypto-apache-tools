@@ -13,7 +13,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <test />
     <!-- App -->
-    <app.main.class>br.com.lidersis.icrypto.apachetools.Main</app.main.class>
+    <app.main.class>com.github.lsjunior.icrypto.apachetools.Main</app.main.class>
     <!-- Libs -->
     <bouncycastle.version>1.70</bouncycastle.version>
     <commons-cli.version>1.5.0</commons-cli.version>
