@@ -93,6 +93,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>${plugin.shade.version}</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -157,7 +158,7 @@
         <version>${plugin.surefire.version}</version>
         <configuration>
           <failIfNoTests>false</failIfNoTests>
-          <skipTests>true</skipTests>
+          <skipTests>false</skipTests>
         </configuration>
       </plugin>
     </plugins>

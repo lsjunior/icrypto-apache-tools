@@ -90,13 +90,20 @@ public class Main {
 
       File inputFile = new File(input);
       if ((!inputFile.exists()) || (!inputFile.isFile())) {
-        System.err.print("Invalid input file " + input);
+        System.err.println("Invalid input file " + input);
         Main.showHelpAndExit(options);
       }
 
       File outputDir = new File(output);
+      if (!outputDir.exists()) {
+        boolean b = outputDir.mkdirs();
+        if (!b) {
+          System.err.println("Cant create output dir " + output);
+          Main.showHelpAndExit(options);
+        }
+      }
       if ((!outputDir.exists()) || (!outputDir.isDirectory())) {
-        System.err.print("Invalid output dir " + input);
+        System.err.println("Invalid output dir " + output);
         Main.showHelpAndExit(options);
       }
 
@@ -111,22 +118,23 @@ public class Main {
             if (line.startsWith("#")) {
               continue;
             }
+            System.out.println("Handling " + line);
+            byte[] bytes = Main.doGet(line.substring(4));
+            if ((bytes == null) || (bytes.length == 0)) {
+              continue;
+            }
             if (line.startsWith("P7B")) {
-              byte[] bytes = Main.doGet(line.substring(4));
               certificates = pkcs7CertificateReader.read(new ByteArrayInputStream(bytes));
             } else if (line.startsWith("P7S")) {
-              byte[] bytes = Main.doGet(line.substring(4));
               certificates = PemCertificateReader.getInstance().read(new ByteArrayInputStream(bytes));
             } else if (line.startsWith("PEM")) {
               try {
-                byte[] bytes = Main.doGet(line.substring(4));
                 Certificate certificate = Certificates.toCertificate(bytes);
                 certificates = Collections.singletonList(certificate);
               } catch (Exception e) {
                 System.err.println("Error: " + line + " " + e.getMessage());
               }
             } else if (line.startsWith("ZIP")) {
-              byte[] bytes = Main.doGet(line.substring(4));
               Map<String, Certificate> map = IcpBrasilHierarchyDownloader.getCertificates(new ByteArrayInputStream(bytes));
               Collection<Certificate> collection = map.values();
               certificates = Lists.newArrayList(collection);
@@ -140,7 +148,7 @@ public class Main {
         }
       } catch (IOException e) {
         // e.printStackTrace(System.err);
-        System.err.print("Error: " + e.getMessage());
+        System.err.println("Error: " + e.getMessage());
         System.exit(1);
       }
 
@@ -176,13 +184,20 @@ public class Main {
 
       File inputDir = new File(input);
       if ((!inputDir.exists()) || (!inputDir.isDirectory())) {
-        System.err.print("Invalid input dir " + input);
+        System.err.println("Invalid input dir " + input);
         Main.showHelpAndExit(options);
       }
 
       File outputDir = new File(output);
+      if (!outputDir.exists()) {
+        boolean b = outputDir.mkdirs();
+        if (!b) {
+          System.err.println("Cant create output dir " + output);
+          Main.showHelpAndExit(options);
+        }
+      }
       if ((!outputDir.exists()) || (!outputDir.isDirectory())) {
-        System.err.print("Invalid output dir " + input);
+        System.err.println("Invalid output dir " + output);
         Main.showHelpAndExit(options);
       }
 
@@ -199,7 +214,7 @@ public class Main {
             }
           }
         } catch (Exception e) {
-          System.err.print("Error " + e.getMessage() + ", file " + certFile.getName());
+          System.err.println("Error " + e.getMessage() + ", file " + certFile.getName());
         }
       }
     } else {
